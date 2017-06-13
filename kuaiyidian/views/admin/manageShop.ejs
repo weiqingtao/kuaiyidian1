@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Bootstrap 实例 - 上下文类</title>
+  <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">  
+  <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<table class="table">
+  <caption>上下文表格布局</caption>
+  <thead>
+    <tr>
+      <th>商店名称</th>
+      <th>商店图片</th>
+      <th>商店介绍</th>
+      <th>建店时间</th>
+      <th>商店类型</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="active">
+      <% rs.forEach(function(row){ %>
+          <tr>
+            <td><%-row.shopname%></td>
+            <td><%-row.shopintr%></td>
+            <td><img src="<%-row.photourl%>" width='60px' height='60px'/></td>
+            <td>
+            <%
+              time = row.createtime;
+            %>
+            <%-time.getFullYear()%>年
+            <%-time.getMonth()+1%>月
+            <%-time.getDate()%>日
+            </td>
+            <td><%-row.shoptype%></td>
+          </tr>
+        <% }) %>
+    </tr>
+  </tbody>
+</table>
+
+</body>
+</html>
+

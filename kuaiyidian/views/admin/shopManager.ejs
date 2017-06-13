@@ -1,0 +1,136 @@
+<link rel="stylesheet" href="http://cache.amap.com/lbs/static/main.css?v=1.0"/>
+    <script type="text/javascript"
+            src="http://webapi.amap.com/maps?v=1.3&key=ebb3310e602e7027987911af5e30be56"></script>
+<style>
+	#myform input{
+		margin-top:6px;
+	}
+	#myform textarea{
+		margin-top:6px;
+	}
+	#myform label{
+		margin-top:6px;
+	}
+	#myform select{
+		margin-top:6px;
+	}
+</style>
+<script>
+function onSubPub(){
+	if(pubform.shopname.value==''){
+		alert('营业点名称不允许空');
+		pubform.shopname.focus();
+		return false;
+	}
+	if(pubform.shopintr.value==''){
+		alert('营业点简介不允许空');
+		pubform.shopintr.focus();
+		return false;
+	}
+	if(pubform.shoptype.value==0){
+		alert('请选择营业类别');
+		pubform.shoptype.focus();
+		return false;
+	}
+
+	return true;
+}
+</script>
+<input type='button' value='创建新商家' />
+<form name="shopForm" action="/admin/pubShop" method="post" enctype="multipart/form-data">
+<div class="form-group" id='myform'>
+    <input type="text" class="form-control" name="shopname" placeholder="请输入营业点名称">
+	<input type="text" class="form-control" name="email" placeholder="请输入营业点账号">
+    <input type="text" class="form-control" name="pwd" placeholder="请输入营业点密码">
+    <textarea class="form-control" rows="5" placeholder="请输入营业简介" name='shopintr'></textarea>
+    <input type="text" class="form-control" name='keywords' placeholder="请输入查询关键词">
+    <select class="form-control" name='shoptype'>
+      <option value='0'>请选择经营类别</option>
+      
+    </select>
+    <label for="lastname" class="col-sm-2 control-label">店铺图片</label>
+    <input type="file" id="inputfile" name='photourl'>
+    经度:<input type='text' name='lng' readonly>&nbsp;
+    维度:<input type='text' name='lat' readonly>&nbsp;
+    <input class="btn btn-primary" data-toggle="modal" data-target="#myModal" value='确定地理位置'>
+    <br/>
+    <input type="submit" class="btn btn-primary"  value='提交'>
+</input>
+</div>
+</form>
+
+
+				
+
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 650px;height: 800px">
+            <div class="modal-body">
+	      	<div id="mapContainer" style='margin-top:36px;margin-left:12px;width:600px;height:600px'></div>
+			<div id="tip">
+	      	<script>
+	      		//初始化地图对象，加载地图
+			    var map = new AMap.Map('mapContainer', {
+					view: new AMap.View2D({
+						center: new AMap.LngLat(116.397428, 39.90923),
+						zoom: 18
+					})
+			    });
+			    AMap.plugin(['AMap.ToolBar','AMap.Scale','AMap.OverView'],
+				    function(){
+				        map.addControl(new AMap.ToolBar());
+
+				        map.addControl(new AMap.Scale());
+
+				        map.addControl(new AMap.OverView({isOpen:true}));
+				});
+				AMap.plugin(['AMap.Autocomplete','AMap.PlaceSearch'],function(){
+      var autoOptions = {
+        city: "北京", //城市，默认全国
+        input: "keyword"//使用联想输入的input的id
+      };
+      autocomplete= new AMap.Autocomplete(autoOptions);
+      var placeSearch = new AMap.PlaceSearch({
+            city:'北京',
+            map:map
+      })
+      AMap.event.addListener(autocomplete, "select", function(e){
+         //TODO 针对选中的poi实现自己的功能
+         placeSearch.search(e.poi.name)
+      });
+    });
+
+				function eventHandler(e){
+					// alert(e.lng);
+					shopForm.lng.value=e.lnglat.getLng();
+					shopForm.lat.value=e.lnglat.getLat();
+					var marker = new AMap.Marker({                 
+					  map:map,                 
+					  position:e.lnglat,  
+					  title:"商店",
+					  icon:"http://webapi.amap.com/images/0.png",
+					  offset:new AMap.Pixel(-10,-34)
+				   }); 
+				   //mapObj.setCenter(lnglat);
+				   marker.setMap(map);  //在地图上添加点
+				   marker.setLabel({//label默认蓝框白底左上角显示，样式className为：amap-marker-label
+				        offset: new AMap.Pixel(-10, -20),//修改label相对于maker的位置
+				        content: shopForm.shopname.value
+				    });
+				}
+
+
+			    var listener = AMap.event.addListener(map,"click",eventHandler);
+			    
+	      	</script>
+	      	 <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">提交</button>
+            </div>
+            </div>
+           
+        </div><!-- /.modal-content -->
+        
+    </div><!-- /.modal -->
+

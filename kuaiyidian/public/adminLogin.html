@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">  
+   <script src="/javascripts/jquery-2.1.4.min.js"></script>
+   <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+   <style>
+        .headStyle{
+             height: 2.5em;
+             margin-top:6px;
+        }
+   </style>
+  </head>
+  <body>
+        <div class="row">
+          <div class="col-sm-1"></div>
+          <div class="col-sm-10 headStyle">
+                <form name="loginForm" action="/admin/login" method="post">
+                    <table align='center' height='213px' ">
+                    <caption style="text-align: center;font-size: 30px">登录</caption>
+                        <tr>
+                            <td align='right'>email:</td>
+                            <td><input type="text" name="email" class="form-control" placeholder="请输入email"></td>
+                        </tr>
+                        <tr>
+                            <td align='right'>密码：</td>
+                            <td><input type="password" name="pwd" class="form-control" placeholder="请输入密码"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" align="center">
+                            <input type="hidden" name="url">
+                            <script type="text/javascript">
+                                loginForm.url.value = location.href;
+                            </script>
+                                <button type="submit" class="btn btn-primary">登陆</button>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+                
+            </div>
+        <div class="col-sm-1"></div>
+        </div>
+</body>
+</html>

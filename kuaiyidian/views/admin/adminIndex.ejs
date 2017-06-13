@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">  
+   <script src="/javascripts/jquery-2.1.4.min.js"></script>
+   <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+   <style>
+        .headStyle{
+             height: 2.5em;
+             margin-top:6px;
+        }
+   </style>
+  </head>
+  <body>
+        <div class="row">
+          <div class="col-sm-1"></div>
+          <div class="col-sm-10 headStyle" style='text-align: center'>
+                管理员空间
+          </div>
+          <div class="col-sm-1"></div>
+        </div>
+        <div class="row">
+          <div class="col-sm-1"></div>
+          <div class="col-sm-3" style='text-align: center'>
+                <table align='center'>
+                  <tr><td>
+                 <input type="button" onclick="window.location.href='./manage'" value="商家管理">
+                  </td></tr>
+                </table>
+          </div>
+          <div class="col-sm-7" style='text-align: center'>
+               <% include ./shopManager%>
+          </div>
+          <div class="col-sm-1"></div>
+        </div>
+</body>
+</html>
