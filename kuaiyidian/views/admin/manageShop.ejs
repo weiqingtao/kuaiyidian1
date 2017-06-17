@@ -2,15 +2,27 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Bootstrap 实例 - 上下文类</title>
   <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">  
   <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
   <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
+<script type="text/javascript">
+        function deleteShop(id){
+            if(confirm('是否确认删除？')){
+                location.href='/admin/deleteShop?id='+id;
+            }
+        }
+       function updateShop(){
+    
+    $('#myModal').modal('show');
+  }
+</script>
 <body>
-
-<table class="table">
-  <caption>上下文表格布局</caption>
+<div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8">
+  <table class="table">
+  <caption style="text-align: center;font-size: 30px">商家审核申请列表</caption>
   <thead>
     <tr>
       <th>商店名称</th>
@@ -18,6 +30,7 @@
       <th>商店介绍</th>
       <th>建店时间</th>
       <th>商店类型</th>
+      <th>操作</th>
     </tr>
   </thead>
   <tbody>
@@ -36,12 +49,58 @@
             <%-time.getDate()%>日
             </td>
             <td><%-row.shoptype%></td>
+            <td>
+            <a href='#' onclick='updateShop()'>修改</a>&nbsp;
+            <a href="#" onclick="deleteShop(<%-row.id%>)">删除</a>
+        </td>
+
           </tr>
         <% }) %>
-    </tr>
+            </tr>
+     
   </tbody>
 </table>
+        </div>
+        <div class="col-sm-2"></div>
+
 
 </body>
 </html>
-
+<!---------------- 模态框 ---------------------------->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+      <form name='pubform' method='post' action='./pubshop' onsubmit='return onSubPub();' enctype="multipart/form-data">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+              &times;
+            </button>
+            <h4 class="modal-title" id="myModalLabel">
+              填写营业点信息
+            </h4>
+          </div>
+          <div class="modal-body">
+            <div class="form-group" id='myform'>
+                <input type="text" class="form-control" name="shopname" placeholder="请输入营业点名称">
+                <input type="text" class="form-control" name="shopintr" placeholder="请输入营业点简介">
+                <input type="text" class="form-control" name='keywords' placeholder="请输入查询关键词">
+                  <select class="form-control" name='shoptype'>
+                    <option value='0'>请选择经营类别</option>
+                    <option value='1'>快餐</option>
+                    <option value='2'>火锅</option>
+                  </select>
+                <label for="lastname" class="col-sm-2 control-label">店铺图片</label>
+                <input type="file" id="inputfile" name='photourl'>
+                <input type='hidden' name='lng'>
+                <input type='hidden' name='lat'>
+            </div>
+          </div>
+          <div class="modal-footer" style='text-align:center'>
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+            </button>
+            <input type="submit" class="btn btn-primary" onclick='dian();' value='提交'>
+            </input>
+          </div>
+        </div><!-- /.modal-content -->
+      </form>
+      </div><!-- /.modal -->

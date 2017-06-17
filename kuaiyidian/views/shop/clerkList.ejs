@@ -1,0 +1,25 @@
+     <table class="table">
+  <caption style="text-align: center;font-size: 20px">店员列表</caption>
+  <thead>
+    <tr>
+      <th>店员名称</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="active">
+      <% shopuserRs.forEach(function(row){ %>
+          <tr>
+            <td><%-row.nicheng%></td>
+
+            <td>
+            <a href='#' onclick='updateShop()'>修改</a>&nbsp;
+            <a href="#" onclick="deleteShop(<%-row.id%>)">删除</a>
+        </td>
+
+          </tr>
+        <% }) %>
+            </tr>
+     
+  </tbody>
+</table>

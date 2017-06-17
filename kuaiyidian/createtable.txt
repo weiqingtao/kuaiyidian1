@@ -1,0 +1,77 @@
+/*管理员表*/
+create table adminusers(
+id bigint not null auto_increment primary key,
+email varchar(60) not null,
+pwd varchar(60) not null,
+nicheng varchar(60) not null,
+createtime timestamp not null,
+role tinyint not null default 0,
+updtime timestamp not null,
+msgnum int(4) default 0,
+unique key adminemailuniq (email), 
+unique key nichenguniq (nicheng)
+)ENGINE=innodb DEFAULT CHARSET=utf8; 
+insert into adminusers set email='admin',pwd='admin',nicheng='admin',role=0;
+/*alter table users add msgnum int(4) default 0;*/
+/*
+	饭店表
+		饭店管理员
+		服务员
+		后厨
+*/
+create table shops(
+id bigint not null auto_increment primary key,
+shopname varchar(120) not null,
+photourl varchar(120) not null,		/*店铺图片url*/
+shopintr varchar(480) not null,		/*店铺简介*/
+shoptype int not null,				/*店铺类型*/
+keywords varchar(120) not null,		/*关键词*/
+lng decimal(10,7) not null,
+lat decimal(10,7) not null,
+praise bigint not null default 0,   /*好评度*/
+liveflag tinyint not null default 0, /*0表在营业,1表暂停,2表关闭,-1表强制停业*/
+createtime timestamp not null
+)ENGINE=innodb DEFAULT CHARSET=utf8; 
+/*
+	需要添加地址、电话、email等
+*/
+
+/*商店账户表*/
+create table shopusers(
+id bigint not null auto_increment primary key,
+shopid bigint not null,
+email varchar(60) not null,
+pwd varchar(60) not null,
+nicheng varchar(60) not null,
+role tinyint not null default 0,	/*0管理员,1:服务员,2:后厨*/
+updtime timestamp not null,
+createtime timestamp not null,
+unique key shopemailuniq (email)
+)ENGINE=innodb DEFAULT CHARSET=utf8; 
+
+/*消费者表*/
+
+/*菜单表(价格，定价，当前价)*/
+/*菜单分类表*/
+create table menutypes(
+id bigint not null auto_increment primary key,
+shopid bigint not null,
+typename varchar(30) not null
+)ENGINE=myisam DEFAULT CHARSET=utf8; 
+
+/*点餐意向表*/
+
+/*订单表*/
+
+/*餐桌表*/
+
+/*外送申请表*/
+
+/*外送组合表*/
+
+
+
+
+
+
+
