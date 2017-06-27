@@ -42,22 +42,37 @@ id bigint not null auto_increment primary key,
 shopid bigint not null,
 email varchar(60) not null,
 pwd varchar(60) not null,
-nicheng varchar(60) not null,
+nicheng varchar(60) not null,		/*商店名称*/
 role tinyint not null default 0,	/*0管理员,1:服务员,2:后厨*/
 updtime timestamp not null,
 createtime timestamp not null,
 unique key shopemailuniq (email)
 )ENGINE=innodb DEFAULT CHARSET=utf8; 
 
+/*菜单分类表*/
+create table menus(
+id bigint not null auto_increment primary key,
+shopid bigint not null,
+typename varchar(60) not null,
+num int not null default 0
+)ENGINE=myisam DEFAULT CHARSET=utf8; 
+
+/*菜品表*/
+create table dishes(
+id bigint not null auto_increment primary key,
+shopid bigint not null,
+menuid bigint not null,
+dishname varchar(60) not null,
+price decimal(7,2) not null,
+dishphoto varchar(240),
+putaway tinyint not null default 1	/*0表下架,1表上架 */
+)ENGINE=myisam DEFAULT CHARSET=utf8; 
+
+/*销量表*/
+
 /*消费者表*/
 
 /*菜单表(价格，定价，当前价)*/
-/*菜单分类表*/
-create table menutypes(
-id bigint not null auto_increment primary key,
-shopid bigint not null,
-typename varchar(30) not null
-)ENGINE=myisam DEFAULT CHARSET=utf8; 
 
 /*点餐意向表*/
 

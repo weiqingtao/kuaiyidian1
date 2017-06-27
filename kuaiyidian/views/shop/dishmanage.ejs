@@ -1,0 +1,82 @@
+<script>
+function addDish(){
+	dishForm.reset();
+	dishForm.dishid.value = 0;
+	dishForm.formBtn.value='创建';
+	 $('#dishModal').modal('show');
+}
+function updDish(thisa,dishId){
+	tds=$(thisa).parent().parent().children();
+	dishForm.dishname.value=tds[1].innerText;
+	dishForm.price.value = tds[2].innerText;
+	dishForm.dishid.value = dishId;
+	dishForm.formBtn.value='修改';
+    $('#dishModal').modal('show');
+  }
+ function delDish(menuid,dishid){
+ 	if(confirm('确定删除此道菜品吗?')){
+ 		$.get('./delDish?dishid='+dishid+'&menuid='+menuid,function(data){
+ 			if(data==1){
+ 				$('#t'+menuid+' td').load('./dishes?id='+menuid);
+ 				num = $('#n'+menuid).text();
+                $('#n'+menuid).text(parseInt(num)-1);
+ 			}
+ 		})
+ 	}
+ }
+  function downsale(dishid){
+  if(confirm('确定下架此道菜品吗?')){
+    $.get('./downsale?dishid='+dishid,function(data){
+      if(data==1){
+        alert("成功");
+      }
+    })
+  }
+ }
+</script>
+
+<input type="button" class="btn btn-primary" value='创建菜品' onclick='addDish()'/>
+
+<table class="table table-hover" align="center">
+  <thead>
+    <tr>
+      <td>图片</th>
+      <td>名称</td>
+      <td>价格</td>
+      <td>状态</td>
+      <td>关键词</td>
+      <td>操作</td>
+    </tr>
+  </thead>
+  <tbody>
+    <% dishRs.forEach(function(item){ %>
+    <tr>
+      <td><img src='<%-item.dishphoto%>' width='80' height='60'/></td>
+      <td><%-item.dishname%></td>
+      <td><%-item.price%></td>
+      <td>
+      	<%
+      		if(item.putaway==1){
+      		%>
+      			在售
+      		<%
+      		}else{
+      		%>
+      			下架
+      		<%
+      		}
+      	%>
+      </td>
+      <td><%-item.keywords%></td>
+      <td>
+        <a href='#' onclick='downsale(<%-item.id%>)'>下架</a>&nbsp;
+        <a href='#' onclick='updDish(this,<%-item.id%>)'>修改</a>&nbsp;
+        <a href='#' onclick='delDish(<%-item.menuid%>,<%-item.id%>)'>删除</a>
+      </td>
+    </tr>
+    <tr id='t<%-item.id%>' style='display:none'>
+      <td colspan="3" align="center"></td>
+    </tr>
+    <% }) %>
+  </tbody>
+</table>

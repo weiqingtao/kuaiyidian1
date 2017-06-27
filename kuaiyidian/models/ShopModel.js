@@ -3,6 +3,7 @@ var sequelize =require('./ModelHeader')();
 
 var ShopModel = sequelize.define('shops', {
 	id: {type:Sequelize.BIGINT,primaryKey: true},
+    shopid: Sequelize.BIGINT,
     shopname: Sequelize.STRING,
     photourl: Sequelize.STRING,
     shopintr: Sequelize.STRING,

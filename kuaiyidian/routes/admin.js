@@ -1,58 +1,56 @@
-const router = require('koa-router')()
+var router = require('koa-router')();
 var Users = require('../models/UserModel');
 var ShopModel = require('../models/ShopModel');
-var ShopUserModel = require('../models/ShopUserModel');
-var sequelize =require('../models/ModelHeader')();
 var formidable = require('formidable');
-const multer = require('koa-multer');//加载koa-multer模块  
-router.prefix('/admin')
+var sequelize =require('../models/ModelHeader')(); 
+var ShopUserModel = require('../models/ShopUserModel');
 
-router.get('/', async (ctx, next) => {
-	let loginbean = ctx.session.loginbean;
-	if(loginbean){
-		await ctx.render("admin/adminIndex");
-	}else{
-		ctx.redirect('/adminLogin.html');
-	}
-	
-});
-
-
-
-
-//登录管理员
-router.post('/login', async (ctx, next) => {
-	let result=await new Promise(function (resolve,reject){
-   Users.findOne({where:{email:ctx.request.body.email,pwd:ctx.request.body.pwd}}).then(function(rs){
-		if(rs!=null){
-		let  loginbean=new Object();
-			loginbean.nicheng = rs.nicheng;
-			loginbean.role = rs.role;
-		    loginbean.msgnum = rs.msgnum;
-		ctx.session.loginbean=loginbean;
-			//ctx.redirect(req.body.url);
-			resolve(1);
-		}else{
-			resolve(2);
-			
-		}
-	});
-});
-   if(result==1){
-   	//ctx.body="登陆成功！"
-   	ctx.redirect("./");
-   }else{
-   		ctx.body="email/密码错误！"
+router.get('/', async function (ctx, next) {
+  let loginbean = ctx.session.loginbean;
+  if(loginbean.adminrole){
+  	//--------查询shop------------------------
+  	let sql = 'select id,shopname from shops order by id desc';
+  	let rs = await sequelize.query(sql);
+  	await ctx.render('admin/adminIndex', {rs:rs[0]});
+  }else{
+  	ctx.redirect('/adminLogin.html');
   }
+  
+});
+
+router.post('/login', async function (ctx, next) {
+	let rs = await new Promise(function(resolve,reject){
+		Users.findOne({where:{email:ctx.request.body.email,pwd:ctx.request.body.pwd}}).then(function(rs){
+			if(rs!=null){
+				let loginbean=new Object();
+				loginbean.id = rs.id;
+				loginbean.nicheng = rs.nicheng;
+				loginbean.adminrole = rs.role;
+				loginbean.msgnum = rs.msgnum;
+				ctx.session.loginbean=loginbean;
+				//ctx.redirect('/admin/index');
+				resolve(1);
+			}else{
+				resolve(2);
+			}
+		});
+	})
+	if(rs==1){
+		ctx.redirect('./');
+		//ctx.body='登陆成功';
+	}else{
+		ctx.body='email/密码错误';
+	}
+  	
 })
 
 
-router.post('/pubShop', async function (ctx, next) {
+router.post('/createShop', async function (ctx, next) {
   let loginbean = ctx.session.loginbean;
 
   let form = new formidable.IncomingForm();   //创建上传表单
   form.encoding = 'utf-8';        //设置编辑
-  form.uploadDir = './public/images/shop/';     //设置上传目录 文件会自动保存在这里
+  form.uploadDir = './public/images/shopphoto/';     //设置上传目录 文件会自动保存在这里
   form.keepExtensions = true;     //保留后缀
   form.maxFieldsSize = 5 * 1024 * 1024 ;   //文件大小5M
   let fields = await new Promise(async function(resolve,reject){
@@ -76,7 +74,7 @@ router.post('/pubShop', async function (ctx, next) {
    }catch(err){
 		//console.log(err);
 		t.rollback();
-		if(err.errors[0].path=='emailuniq'){
+		if(err.errors[0].path=='shopemailuniq'){
 			ctx.body='账号重复';
 		}else{
 			ctx.body = '数据库错误';
@@ -86,62 +84,20 @@ router.post('/pubShop', async function (ctx, next) {
    }
 
   	ctx.body='商店创建成功';
-})
-              
+  
+
+  // try{
+  // 	let creaters = await ShopModel.create(fields);
+  // 	console.log(creaters);
+  // 	console.log('返回id:'+creaters.null);
+  // }catch(err){
+		// console.log(err.errors[0].message); //识别唯一键
+  // }
+  
 
 
-router.get('/manage', async (ctx, next) => {
-	let a = null;
-	 let rs = await new Promise(function(resolve,reject){
-	 	
-  		let loginbean = ctx.session.loginbean;
-	  	sequelize.query('select * from shops').then(function(shopRs){
-	  		 a = shopRs;
-	  		if(shopRs!=null){
-					resolve(1);
-				}else{
-	                resolve(2); 
-				}
-	  		
-	  		
-	  	});
-	  })
-	 if(rs==1){
-	 	console.log(a);
-		await	ctx.render("admin/manageShop", {rs:a[0]});
-			}else{
-		    ctx.body='添加失败'
-		}
-	
+  
+  
 })
 
-
-		router.get('/deleteShop', async (ctx, next) => {
-			let result=await new Promise(function (resolve,reject){
-		 let id = ctx.request.query.id;
-		  let sql = 'delete from shops where id = ?';
-		  sequelize.query(sql,{replacements:[id]}).then(function(rs){   
-		      if(rs!=null){
-				resolve(1);
-				}else{
-				resolve(2);
-					
-				}
-				    })
-				  })
-			if(result==1){
-   			ctx.body="删除成功"
-   			ctx.redirect("./");
-		}else{
-			ctx.body="删除失败"
-		}
-			 		})
-module.exports = router
-
-
-
-
-
-          
-
-       
+module.exports = router;

@@ -35,16 +35,22 @@ function onSubPub(){
 
 	return true;
 }
+	function createShop(){
+		$('#createShop').show();
+	}
+	function hidCreateShop(){
+		$('#createShop').hide();
+	}
 </script>
-<input type='button' value='创建新商家' />
-<form name="shopForm" action="/admin/pubShop" method="post" enctype="multipart/form-data">
-<div class="form-group" id='myform'>
+<input type='button' value='创建新商家' onclick='createShop()'/>
+<div class="form-group" id='createShop' style='display:none'>
+	<form id='pubform' name='pubform' method="post" action='./createShop' enctype="multipart/form-data" onsubmit="return onSubPub();">
     <input type="text" class="form-control" name="shopname" placeholder="请输入营业点名称">
-	<input type="text" class="form-control" name="email" placeholder="请输入营业点账号">
+    <input type="text" class="form-control" name="email" placeholder="请输入营业点账号">
     <input type="text" class="form-control" name="pwd" placeholder="请输入营业点密码">
     <textarea class="form-control" rows="5" placeholder="请输入营业简介" name='shopintr'></textarea>
     <input type="text" class="form-control" name='keywords' placeholder="请输入查询关键词">
-     <select class="form-control" name='shoptype'>
+    <select class="form-control" name='shoptype'>
       <option value='0'>请选择经营类别</option>
       <option value='1'>快餐</option>
       <option value='2'>火锅</option>
@@ -53,85 +59,36 @@ function onSubPub(){
     <input type="file" id="inputfile" name='photourl'>
     经度:<input type='text' name='lng' readonly>&nbsp;
     维度:<input type='text' name='lat' readonly>&nbsp;
-    <input class="btn btn-primary" data-toggle="modal" data-target="#myModal" value='确定地理位置'>
+    <input type="button" class="btn btn-primary" value='确定地理位置' data-toggle="modal" data-target="#myModal">
     <br/>
-    <input type="submit" class="btn btn-primary"  value='提交'>
-</input>
+    <input type="submit" class="btn btn-primary" onclick='dian();' value='提交'></input>
+    &nbsp;
+    <input type="button" class="btn btn-primary" onclick='hidCreateShop();' value='收起'></input>
+    </form>
 </div>
-</form>
+<table class="table table-hover">
+  <caption>餐饮网店列表</caption>
+  <thead>
+    <tr>
+      <th>饭店名称</th>
+      <th>用户</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+  	<% rs.forEach(function(item){ %>
+    <tr>
+      <td><%-item.shopname%></td>
+      <td><a href='#'>用户信息</a></td>
+      <td>
+      	<a href='#'>修改</a>&nbsp;
+      	<a href='#'>删除</a>
+      </td>
+    </tr>
+    <% }) %>
+  </tbody>
+</table>
+<% include ./mapModel %>
 
 
 				
-
-
-<!-- 模态框（Modal） -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content" style="width: 650px;height: 800px">
-            <div class="modal-body">
-	      	<div id="mapContainer" style='margin-top:36px;margin-left:12px;width:600px;height:600px'></div>
-			<div id="tip">
-	      	<script>
-	      		//初始化地图对象，加载地图
-			    var map = new AMap.Map('mapContainer', {
-					view: new AMap.View2D({
-						center: new AMap.LngLat(116.397428, 39.90923),
-						zoom: 18
-					})
-			    });
-			    AMap.plugin(['AMap.ToolBar','AMap.Scale','AMap.OverView'],
-				    function(){
-				        map.addControl(new AMap.ToolBar());
-
-				        map.addControl(new AMap.Scale());
-
-				        map.addControl(new AMap.OverView({isOpen:true}));
-				});
-				AMap.plugin(['AMap.Autocomplete','AMap.PlaceSearch'],function(){
-      var autoOptions = {
-        city: "北京", //城市，默认全国
-        input: "keyword"//使用联想输入的input的id
-      };
-      autocomplete= new AMap.Autocomplete(autoOptions);
-      var placeSearch = new AMap.PlaceSearch({
-            city:'北京',
-            map:map
-      })
-      AMap.event.addListener(autocomplete, "select", function(e){
-         //TODO 针对选中的poi实现自己的功能
-         placeSearch.search(e.poi.name)
-      });
-    });
-
-				function eventHandler(e){
-					// alert(e.lng);
-					shopForm.lng.value=e.lnglat.getLng();
-					shopForm.lat.value=e.lnglat.getLat();
-					var marker = new AMap.Marker({                 
-					  map:map,                 
-					  position:e.lnglat,  
-					  title:"商店",
-					  icon:"http://webapi.amap.com/images/0.png",
-					  offset:new AMap.Pixel(-10,-34)
-				   }); 
-				   //mapObj.setCenter(lnglat);
-				   marker.setMap(map);  //在地图上添加点
-				   marker.setLabel({//label默认蓝框白底左上角显示，样式className为：amap-marker-label
-				        offset: new AMap.Pixel(-10, -20),//修改label相对于maker的位置
-				        content: shopForm.shopname.value
-				    });
-				}
-
-
-			    var listener = AMap.event.addListener(map,"click",eventHandler);
-			    
-	      	</script>
-	      	 <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">提交</button>
-            </div>
-            </div>
-           
-        </div><!-- /.modal-content -->
-        
-    </div><!-- /.modal -->
-

@@ -16,24 +16,32 @@
         <div class="row">
           <div class="col-sm-1"></div>
           <div class="col-sm-10 headStyle">
-                <form name="loginForm" action="/admin/login" method="post">
-                    <table align='center' height='213px' ">
-                    <caption style="text-align: center;font-size: 30px">管理员登录</caption>
+                <form name='loginForm' action='/admin/login' method="post">
+                    <table height='240' style='float:left'>
+                        <tr>
+                            <td colspan='2' align="center">
+                                登陆
+                            </td>
+                        </tr>
                         <tr>
                             <td align='right'>email:</td>
-                            <td><input type="text" name="email" class="form-control" placeholder="请输入email"></td>
+                            <td>
+                                <input type='text' name='email'/>
+                            </td>
                         </tr>
                         <tr>
-                            <td align='right'>密码：</td>
-                            <td><input type="password" name="pwd" class="form-control" placeholder="请输入密码"></td>
+                            <td align='right'>密码:</td>
+                            <td>
+                                <input type='password' name='pwd'/>
+                            </td>
                         </tr>
                         <tr>
-                            <td colspan="2" align="center">
-                            <input type="hidden" name="url">
-                            <script type="text/javascript">
-                                loginForm.url.value = location.href;
-                            </script>
-                                <button type="submit" class="btn btn-primary">登陆</button>
+                            <td align='center' colSpan='2'>
+                                <input type='hidden' name='url'/>
+                                <script>
+                                loginForm.url.value=location.href;
+                                </script>
+                                <input type="submit" class="btn btn-primary" value='登陆'/>
                             </td>
                         </tr>
                     </table>

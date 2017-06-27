@@ -1,0 +1,45 @@
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">请点选商店的位置</h4>
+            </div>
+            <div class="modal-body"  id="mapContainer" style='margin-top:36px;margin-left:-240px;width:1024px;height:600px'>
+                <!-- --------------------------------------- -->
+                <link rel="stylesheet" href="http://cache.amap.com/lbs/static/main.css?v=1.0"/>
+                <script type="text/javascript"
+            src="http://webapi.amap.com/maps?v=1.3&key=ebb3310e602e7027987911af5e30be56"></script>
+            <script>
+                //初始化地图对象，加载地图
+                var map = new AMap.Map('mapContainer', {
+                    view: new AMap.View2D({
+                        center: new AMap.LngLat(116.397428, 39.90923),
+                        zoom: 12
+                    })
+                });
+                AMap.plugin(['AMap.ToolBar','AMap.Scale','AMap.OverView'],
+                    function(){
+                        map.addControl(new AMap.ToolBar());
+
+                        map.addControl(new AMap.Scale());
+
+                        map.addControl(new AMap.OverView({isOpen:true}));
+                });
+
+                function eventHandler(e){
+                    pubform.lng.value=e.lnglat.getLng(); //经度
+                    pubform.lat.value=e.lnglat.getLat(); //维度
+                    $('#myModal').modal('hide');
+                }
+                var listener = AMap.event.addListener(map,"click",eventHandler);
+            </script>
+                <!-- --------------------------------------- -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>

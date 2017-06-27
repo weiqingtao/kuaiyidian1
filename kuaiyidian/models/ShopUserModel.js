@@ -3,7 +3,7 @@ var sequelize =require('./ModelHeader')();
 
 var ShopUserModel = sequelize.define('shopusers', {
 	id: {type:Sequelize.BIGINT,primaryKey: true},
-	shopid:Sequelize.BIGINT,
+    shopid: Sequelize.BIGINT,
     email: Sequelize.STRING,
     pwd: Sequelize.STRING,
     nicheng: Sequelize.STRING,

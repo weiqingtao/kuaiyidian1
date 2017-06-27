@@ -1,16 +1,9 @@
-const router = require('koa-router')()
-var Users = require('../models/UserModel');
+var router = require('koa-router')();
 
-router.prefix('/users')
 
 router.get('/', function (ctx, next) {
-  ctx.body = 'this is a users response!'
-})
-
-router.get('/bar', function (ctx, next) {
-  ctx.body = 'this is a users/bar response'
-})
+  ctx.body = 'this a users response!';
+});
 
 
-
-module.exports = router
+module.exports = router;

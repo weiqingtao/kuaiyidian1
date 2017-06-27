@@ -1,20 +1,40 @@
-<script>
-  function onaddmenu(){
-    return true;
-  }
- </script>
 <% include ./shoptop %>
-<div style="margin-top: 30px">
-<% include ./shopLeft %>
-<div id='clerkhead' style='width:80%;height:30px;text-align: center;font-size: 20px'>
+        <div class="row">
+          <div class="col-sm-1"></div>
+          <div class="col-sm-1" style='text-align: center'>
+                <% include ./shopleft %>
+          </div>
+          <div class="col-sm-9" style='text-align: center;'>
+          <!------------------------------------------------------>
+            <div id='clerkhead' style='width:80%;height:30px;border:1px solid #000000;text-align: center'>
   菜单分类管理
 </div>
+<script>
+//-----显示菜品管理----------------------
+  function dishes(typeid){
+    $('#t'+typeid).toggle(function(){
+      if(this.style.display==''){
+        dishForm.menuid.value=typeid;
+        $('#t'+typeid+' td').load('./dishes?id='+typeid);
+      }
+      
+    });
+    
+  }
+
+  
+
+  function onAddClerk(){
+    return true;
+  }
+</script>
 <div class="row" style="margin-top: 9px">
           <div class="col-sm-1"></div>
-          <div class="col-sm-2" style="margin-left: -20px">
-            <input type="button" class="btn btn-primary" value='创建菜单分类' data-toggle="modal" data-target="#myModal1" />
+          <div class="col-sm-2">
+            <input type="button" class="btn btn-primary" value='创建菜单分类' data-toggle="modal" data-target="#myModal" />
           </div>
- <div class="col-sm-8" id="main">
+          <div class="col-sm-8"></div>
+</div>
 <table class="table table-hover" align="center">
   <caption>分类列表</caption>
   <thead>
@@ -28,22 +48,21 @@
     <% rs.forEach(function(item){ %>
     <tr>
       <td><%-item.typename%></td>
-      <td><a href='#'>有<b><%-item.num%></b>种菜品</a></td>
+      <td><a href='#' onclick='dishes(<%-item.id%>)'>有<b id='n<%-item.id%>' style='color:red'><%-item.num%></b>种菜品</a></td>
       <td>
         <a href='#'>修改</a>&nbsp;
         <a href='#'>删除</a>
       </td>
     </tr>
+    <tr id='t<%-item.id%>' style='display:none'>
+      <td colspan="3" align="center"></td>
+    </tr>
     <% }) %>
   </tbody>
 </table>
- </div>
- <div class="col-sm-1"></div>
- </div>
-</div>
-</body>
-</html>
-<div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+<!-- 菜单分类模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -51,7 +70,9 @@
                 <h4 class="modal-title" id="myModalLabel">添加菜单分类</h4>
             </div>
             <div class="modal-body">
-        <form class="form-horizontal" name='menuForm' method='post' action='./addMenu' onsubmit='return onaddmenu()'>
+          <!--------------------------------------------- -->
+        <form class="form-horizontal" name='menuForm' method='post' action='./addMenu' onsubmit='return onAddClerk()'>
+          
           <div class="form-group">
             <label for="firstname" class="col-sm-2 control-label">分类名称</label>
             <div class="col-sm-10">
@@ -65,7 +86,9 @@
             </div>
           </div>
         </form>
-         </div>
+
+              <!--------------------------------------------- -->
+            </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                 
@@ -73,3 +96,12 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>
+
+          <!----------------菜品modal------------------------ -->
+          <% include ./dishAdd %>
+          <!-- ----------------菜单分类modal------------  -->
+          </div>
+          <div class="col-sm-1"></div>
+        </div>
+</body>
+</html>
